@@ -32,7 +32,9 @@ namespace BookReview.Services.BookServices
         }
         public async Task<Book?> getBookById(int id)
         {
-            var book = await _dataContext.Books.FindAsync(id);
+            var book = await _dataContext.Books
+                .Include(book => book.Reviews)
+                .FirstOrDefaultAsync(book => book.Id == id);
             if (book is null) return null;
             return book;
         }
@@ -53,7 +55,8 @@ namespace BookReview.Services.BookServices
         }
         public async Task<Book?> addReviewToBook(int id, Review review)
         {
-            var book = await _dataContext.Books.FindAsync(id);
+            var book = await _dataContext.Books.Include(book => book.Reviews)
+                .FirstOrDefaultAsync(book => book.Id == id);
             if (book is null) return null;
             book.Reviews.Add(review);
             await _dataContext.SaveChangesAsync();

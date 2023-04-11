@@ -19,5 +19,6 @@ namespace BookReview.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<User> users { get; set; }
         public DbSet<RefreshToken> refreshTokens { get; set; }
+        public DbSet<Review> Reviews { get; set; }
     }
 }
