@@ -40,28 +40,11 @@ namespace BookReview.Controllers
             if (r is null) return BadRequest("Login fail");
             return Ok(r);
         }
-
-        /*[HttpPost("refresh-token")]
-        public Task<AuthenticationResponse RefreshToken([FromBody] string refreshToken)
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<AuthenticationResponse>> refreshToken(string refreshToken)
         {
-            if (refreshToken == null) return BadRequest();
-            return Ok(_userService.refreshToken(refreshToken));
-            *//*var refreshToken = Request.Cookies["refreshToken"];
-
-            if (!user.RefreshToken.Equals(refreshToken))
-            {
-                return Unauthorized("Invalid Refresh Token.");
-            }
-            else if (user.TokenExpires < DateTime.Now)
-            {
-                return Unauthorized("Token expired.");
-            }
-
-            string token = _userService.CreateToken(user);
-            var newRefreshToken = _userService.GenerateRefreshToken();
-            SetRefreshToken(newRefreshToken);
-
-            return Ok(token);*//*
-        }*/
+            if (refreshToken is null) return BadRequest("Expired RefreshToken");
+            return Ok(await _userService.refreshToken(refreshToken));
+        }
     }
 }

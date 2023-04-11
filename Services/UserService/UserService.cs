@@ -90,11 +90,11 @@ namespace BookReview.Services.UserService
             user.Username = request.Username;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-            user.Role = Role.USER;
+            user.Role = Role.USER.ToString();
             await _dataContext.users.AddAsync(user);
             await _dataContext.SaveChangesAsync();
             AuthenticationResponse response = new AuthenticationResponse();
-            response.Role = Role.USER;
+            response.Role = Role.USER.ToString();
             response.token = CreateToken(user);
             response.refreshToken = GenerateRefreshToken(user).Result;
             return response;
@@ -106,11 +106,11 @@ namespace BookReview.Services.UserService
             user.Username = request.Username;
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
-            user.Role = Role.ADMIN;
+            user.Role = Role.ADMIN.ToString();
             _dataContext.users.AddAsync(user);
             await _dataContext.SaveChangesAsync();
             AuthenticationResponse response = new AuthenticationResponse();
-            response.Role = Role.USER;
+            response.Role = Role.USER.ToString();
             response.token = CreateToken(user);
             response.refreshToken = GenerateRefreshToken(user).Result;
             return response;
@@ -141,8 +141,11 @@ namespace BookReview.Services.UserService
         }
         public async Task<string> refreshToken(string rt)
         {
-            var token = _dataContext.refreshTokens.FirstOrDefault(token => token.Token.Equals(rt, StringComparison.InvariantCulture));
-            if (verifyExpiration(token))
+            Console.WriteLine(rt);
+            var token = _dataContext.refreshTokens
+                .Include(rt => rt.User)
+                .FirstOrDefault(token => token.Token == rt);
+            if (token != null && verifyExpiration(token))
             {
                 token.Token=CreateToken(token.User);
                 await _dataContext.SaveChangesAsync();
