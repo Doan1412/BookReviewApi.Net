@@ -30,7 +30,7 @@ namespace BookReview.Controllers
         [HttpPost("registerAdmin")]
         public async Task<ActionResult<AuthenticationResponse>> RegisterAdmin(UserDto request)
         {
-            return Ok(_userService);
+            return Ok(await _userService.registerAdmin(request));
         }
 
         [HttpPost("login")]

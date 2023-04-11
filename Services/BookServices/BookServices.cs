@@ -19,7 +19,7 @@ namespace BookReview.Services.BookServices
         }
         public async Task<List<Book>?> deleteBook(int id)
         {
-            var book=await _dataContext.Books.FindAsync(id);
+            var book=await _dataContext.Books.FindAsync((long)id);
             if (book is null) return null;
             _dataContext.Books.Remove(book);
             await _dataContext.SaveChangesAsync();
@@ -38,9 +38,9 @@ namespace BookReview.Services.BookServices
             if (book is null) return null;
             return book;
         }
-        public async Task<List<Book>?> updateBook(int id, Book request)
+        public async Task<Book> updateBook(Book request)
         {
-            var book = await _dataContext.Books.FindAsync(id);
+            var book = await _dataContext.Books.FindAsync(request.Id);
             if (book is null) return null;
             book.Description = request.Description;
             book.Price = request.Price;
@@ -51,7 +51,7 @@ namespace BookReview.Services.BookServices
             book.Amount = request.Amount;
             book.Author = request.Author;
             await _dataContext.SaveChangesAsync();
-            return await _dataContext.Books.ToListAsync();
+            return book;
         }
         public async Task<Book?> addReviewToBook(int id, Review review)
         {

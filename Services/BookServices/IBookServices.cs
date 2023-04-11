@@ -8,7 +8,7 @@ namespace BookReview.Services.BookServices
         Task<List<Book>?> deleteBook(int id);
         Task<List<Book>> getAllBooks();
         Task<Book?> getBookById(int id);
-        Task<List<Book>?> updateBook(int id, Book request);
+        Task<Book> updateBook(Book request);
         Task<Book?> addReviewToBook(int id, Review review);
     }
 }

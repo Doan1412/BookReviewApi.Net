@@ -38,7 +38,6 @@ namespace BookReview.Services.ReviewServices
         public async Task<List<Review>> getListReviewByBook(long bookId)
         {
             var reviews = await _dataContext.Reviews
-                .Include(b => b.Book)
                 .Where(r => r.Book.Id == bookId)
                 .ToListAsync();
             return reviews;

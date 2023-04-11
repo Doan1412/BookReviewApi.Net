@@ -13,6 +13,6 @@ namespace BookReview.Services.UserService
         Task<AuthenticationResponse> registerUser(UserDto request);
         Task<AuthenticationResponse> registerAdmin(UserDto request);
         Task<AuthenticationResponse> authenticate(UserDto request);
-        Task<string> refreshToken(string refreshtoken);
+        Task<AuthenticationResponse> refreshToken(string refreshtoken);
     }
 }

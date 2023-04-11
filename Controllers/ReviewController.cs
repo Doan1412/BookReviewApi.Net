@@ -16,7 +16,7 @@ namespace BookReview.Controllers
             _reviewServices = reviewServices;
         }
         [Authorize]
-        [HttpGet("bookId={id}")]
+        [HttpGet("/bookId/")]
         public async Task<ActionResult<List<Review>>> getListReviewByBook(long bookId)
         {
             return Ok(new { status = "success", data = await _reviewServices.getListReviewByBook(bookId) });
@@ -25,17 +25,36 @@ namespace BookReview.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Review>> getReviewById(long id)
         {
-            return Ok(new { status = "success", data = await _reviewServices.getReviewById(id) });
+            var r = await _reviewServices.getReviewById(id);
+            ReviewDto review = new ReviewDto()
+            {
+                UserId = r.User.Id,
+                BookId = r.Book.Id,
+                CreatedDate = r.CreatedDate,
+                Content = r.Content,
+                Rating = r.Rating,
+                Id = id
+            };
+            return Ok(new { status = "success", data = review });
         }
         [Authorize]
         [HttpPost("postReview")]
         public async Task<ActionResult<Review>> addReview(ReviewDto reviewDto)
         {
-            return Ok(new { status = "success", data = await _reviewServices.addReview(reviewDto) });
+            var r = await _reviewServices.addReview(reviewDto);
+            ReviewDto review = new ReviewDto()
+            {
+                UserId = r.User.Id,
+                BookId = r.Book.Id,
+                CreatedDate = r.CreatedDate,
+                Content = r.Content,
+                Rating = r.Rating,
+                Id = r.Id,
+            };
+            return Ok(new { status = "success", data = review });
         }
         [Authorize]
         [HttpDelete("{id}")]
-        [NonAction]
         public async Task<ActionResult> removeReview(long Id)
         {
             return Ok(new { status = "success" });

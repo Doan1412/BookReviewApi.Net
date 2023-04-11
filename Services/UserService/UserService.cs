@@ -134,12 +134,12 @@ namespace BookReview.Services.UserService
                 {
                     token = CreateToken(user),
                     refreshToken = GenerateRefreshToken(user).Result,
-                    Role = user.Role,
+                    Role = user.Role.ToString(),
                 };
             }
             return null;
         }
-        public async Task<string> refreshToken(string rt)
+        public async Task<AuthenticationResponse> refreshToken(string rt)
         {
             Console.WriteLine(rt);
             var token = _dataContext.refreshTokens
@@ -147,9 +147,15 @@ namespace BookReview.Services.UserService
                 .FirstOrDefault(token => token.Token == rt);
             if (token != null && verifyExpiration(token))
             {
-                token.Token=CreateToken(token.User);
+                AuthenticationResponse r= new AuthenticationResponse()
+                {
+                    token = CreateToken(token.User),
+                    refreshToken = GenerateRefreshToken(token.User).Result,
+                    Role = token.User.Role.ToString(),
+                };
+                _dataContext.refreshTokens.Remove(token);
                 await _dataContext.SaveChangesAsync();
-                return token.Token;
+                return r;
             }
             return null;
         }
