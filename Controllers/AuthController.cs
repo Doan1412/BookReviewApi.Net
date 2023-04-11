@@ -44,7 +44,9 @@ namespace BookReview.Controllers
         public async Task<ActionResult<AuthenticationResponse>> refreshToken(string refreshToken)
         {
             if (refreshToken is null) return BadRequest("Expired RefreshToken");
-            return Ok(await _userService.refreshToken(refreshToken));
+            var r = await _userService.refreshToken(refreshToken);
+            if (r is null) return BadRequest("Invalid refreshToken");
+            return Ok(r);
         }
     }
 }

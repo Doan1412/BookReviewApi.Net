@@ -35,5 +35,31 @@ namespace BookReview.Services.ReviewServices
             _dataContext.Reviews.Remove(review);
             await _dataContext.SaveChangesAsync();
         }
+        public async Task<List<Review>> getListReviewByBook(long bookId)
+        {
+            var reviews = await _dataContext.Reviews
+                .Include(b => b.Book)
+                .Where(r => r.Book.Id == bookId)
+                .ToListAsync();
+            return reviews;
+        }
+        public async Task<Review> getReviewById(long id)
+        {
+            var review = await _dataContext.Reviews
+                .Include(r => r.User)
+                .Include(r => r.Book)
+                .FirstOrDefaultAsync(r => r.Id == id);
+            return review;
+        }
+        public async Task<Review> updateReview(long id, ReviewDto reviewDto)
+        {
+            var review = await _dataContext.Reviews.FirstOrDefaultAsync(r => r.Id == id);
+            if (review == null) return null;
+            review.Content = reviewDto.Content;
+            review.Rating = reviewDto.Rating;
+            await _dataContext.SaveChangesAsync();
+            return review;
+        }
+        
     }
 }

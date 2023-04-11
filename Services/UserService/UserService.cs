@@ -107,7 +107,7 @@ namespace BookReview.Services.UserService
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
             user.Role = Role.ADMIN.ToString();
-            _dataContext.users.AddAsync(user);
+            await _dataContext.users.AddAsync(user);
             await _dataContext.SaveChangesAsync();
             AuthenticationResponse response = new AuthenticationResponse();
             response.Role = Role.USER.ToString();
