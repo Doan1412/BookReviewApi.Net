@@ -85,6 +85,8 @@ namespace BookReview.Services.UserService
         }
         public async Task<AuthenticationResponse> registerUser(UserDto request)
         {
+            var _user = await _dataContext.users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            if (_user != null) return new AuthenticationResponse();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             User user = new User();
             user.Username = request.Username;
@@ -101,6 +103,8 @@ namespace BookReview.Services.UserService
         }
         public async Task<AuthenticationResponse> registerAdmin(UserDto request)
         {
+            var _user = await _dataContext.users.FirstOrDefaultAsync(u => u.Username == request.Username);
+            if (_user != null) return new AuthenticationResponse();
             CreatePasswordHash(request.Password, out byte[] passwordHash, out byte[] passwordSalt);
             User user = new User();
             user.Username = request.Username;

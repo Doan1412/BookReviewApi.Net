@@ -25,12 +25,16 @@ namespace BookReview.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<AuthenticationResponse>> Register(UserDto request)
         {
-            return Ok(await _userService.registerUser(request));
+            var r = await _userService.registerUser(request);
+            if (r.token == null) return BadRequest("Username is already taken");
+            return Ok(r);
         }
         [HttpPost("registerAdmin")]
         public async Task<ActionResult<AuthenticationResponse>> RegisterAdmin(UserDto request)
         {
-            return Ok(await _userService.registerAdmin(request));
+            var r = await _userService.registerAdmin(request);
+            if (r.token == null) return BadRequest("Username is already taken");
+            return Ok(r);
         }
 
         [HttpPost("login")]
